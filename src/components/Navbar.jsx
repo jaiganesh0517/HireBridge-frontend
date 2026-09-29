@@ -18,6 +18,9 @@ export default function Navbar() {
       {!user && <Link to="/register">Register</Link>}
       {user && <span>({user.role})</span>}
       {user && <button onClick={handleLogout}>Logout</button>}
+      {user?.role === "STUDENT" && <Link to="/create-profile">Complete Profile</Link>}
+      {user?.role === "RECRUITER" && <Link to="/create-recruiter-profile">Complete Profile</Link>}
+      {user?.role === "RECRUITER" && <Link to="/post-job">Post Job</Link>}
     </nav>
   );
 }
