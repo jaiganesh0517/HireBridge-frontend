@@ -21,6 +21,8 @@ export default function Navbar() {
       {user?.role === "STUDENT" && <Link to="/create-profile">Complete Profile</Link>}
       {user?.role === "RECRUITER" && <Link to="/create-recruiter-profile">Complete Profile</Link>}
       {user?.role === "RECRUITER" && <Link to="/post-job">Post Job</Link>}
+      {user?.role === "STUDENT" && <Link to="/my-applications">My Applications</Link>}
+      {user?.role === "RECRUITER" && <Link to="/my-posted-jobs">My Posted Jobs</Link>}
     </nav>
   );
 }

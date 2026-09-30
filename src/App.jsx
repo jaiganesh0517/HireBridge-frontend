@@ -8,7 +8,8 @@ import CreateRecruiterProfile from "./pages/CreateRecruiterProfile";
 import PostJob from "./pages/PostJob";
 import AddBranches from "./pages/AddBranches";
 import Applicants from "./pages/Applicants";
-
+import MyApplications from "./pages/MyApplications";
+import MyPostedJobs from "./pages/MyPostedJobs";
 export default function App() {
   return (
     <>
@@ -23,6 +24,8 @@ export default function App() {
         <Route path="/post-job" element={<PostJob />} />
         <Route path="/post-job/:jobId/branches" element={<AddBranches />} />
         <Route path="/jobs/:jobId/applicants" element={<Applicants />} />
+        <Route path="/my-applications" element={<MyApplications />} />
+        <Route path="/my-posted-jobs" element={<MyPostedJobs />} />
       </Routes>
     </>
   );
