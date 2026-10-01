@@ -8,37 +8,47 @@ export default function Applicants() {
   const [messages, setMessages] = useState({});
 
   const loadApplicants = () => {
-  api.get(`/api/application/${jobId}/applicants`).then((res) => setApplicants(res.data)).catch(console.log);
-};
+    api.get(`/api/application/${jobId}/applicants`).then((res) => setApplicants(res.data)).catch(console.log);
+  };
 
   useEffect(() => { loadApplicants(); }, [jobId]);
 
   const updateStatus = async (applicationId, newStatus) => {
     try {
       await api.patch(`/api/application/${applicationId}/status/${newStatus}`);
-      setMessages((prev) => ({ ...prev, [applicationId]: `Updated to ${newStatus}` }));
-      loadApplicants(); // refresh so the shown status matches the DB
+      setMessages((prev) => ({ ...prev, [applicationId]: { text: `Updated to ${newStatus}`, ok: true } }));
+      loadApplicants();
     } catch (err) {
       console.log(err.response);
-      setMessages((prev) => ({ ...prev, [applicationId]: err.response?.data?.message || "Update failed" }));
+      const text = err.response?.data?.message || "Update failed";
+      setMessages((prev) => ({ ...prev, [applicationId]: { text, ok: false } }));
     }
   };
 
   return (
-    <div style={{ padding: 16, display: "grid", gap: 16, maxWidth: 700, margin: "0 auto" }}>
+    <div className="page stack">
       <h2>Applicants for Job {jobId}</h2>
-      {applicants.length === 0 && <p>No applicants yet.</p>}
+      {applicants.length === 0 && <p className="empty-state">No applicants yet.</p>}
       {applicants.map((a) => (
-        <div key={a.applicationId} style={{ border: "1px solid #ddd", borderRadius: 8, padding: 16 }}>
-          <p><strong>{a.userName}</strong> — {a.branch}, CGPA {a.cgpa}</p>
+        <div key={a.applicationId} className="card">
+          <h3>{a.userName}</h3>
+          <p>{a.branch} · CGPA {a.cgpa}</p>
+          <p>{a.about}</p>
           <p>Skills: {a.skills}</p>
-          <p>Status: {a.status} | Applied: {new Date(a.appliedAt).toLocaleDateString()}</p>
-          <div style={{ display: "flex", gap: 8 }}>
+          <p>Applied: {new Date(a.appliedAt).toLocaleDateString()}</p>
+          <span className={`tag tag-${a.status.toLowerCase()}`}>{a.status}</span>
+
+          <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
             <button onClick={() => updateStatus(a.applicationId, "SHORTLISTED")}>Shortlist</button>
             <button onClick={() => updateStatus(a.applicationId, "SELECTED")}>Select</button>
-            <button onClick={() => updateStatus(a.applicationId, "REJECTED")}>Reject</button>
+            <button className="secondary" onClick={() => updateStatus(a.applicationId, "REJECTED")}>Reject</button>
           </div>
-          {messages[a.applicationId] && <p style={{ color: "green" }}>{messages[a.applicationId]}</p>}
+
+          {messages[a.applicationId] && (
+            <p className={messages[a.applicationId].ok ? "success-text" : "error-text"} style={{ marginTop: 8 }}>
+              {messages[a.applicationId].text}
+            </p>
+          )}
         </div>
       ))}
     </div>

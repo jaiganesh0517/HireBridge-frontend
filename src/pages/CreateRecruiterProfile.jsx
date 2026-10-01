@@ -22,13 +22,13 @@ export default function CreateRecruiterProfile() {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: 320, margin: "40px auto", display: "grid", gap: 12 }}>
+    <form onSubmit={handleSubmit} className="form">
       <h2>Create Recruiter Profile</h2>
       <input name="companyName" placeholder="Company Name" value={form.companyName} onChange={handleChange} />
       <input name="designation" placeholder="Your Designation" value={form.designation} onChange={handleChange} />
       <textarea name="summary" placeholder="Company Summary" value={form.summary} onChange={handleChange} />
       <button type="submit">Save Profile</button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error-text">{error}</p>}
     </form>
   );
 }

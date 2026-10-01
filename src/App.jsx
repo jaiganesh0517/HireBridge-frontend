@@ -1,5 +1,8 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Footer from "./components/Footer";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Jobs from "./pages/Jobs";
@@ -10,14 +13,17 @@ import AddBranches from "./pages/AddBranches";
 import Applicants from "./pages/Applicants";
 import MyApplications from "./pages/MyApplications";
 import MyPostedJobs from "./pages/MyPostedJobs";
+
 export default function App() {
+  const { user } = useAuth();
   return (
     <>
       <Navbar />
+      <main style={{ flex: 1 }}>
       <Routes>
-        <Route path="/" element={<Navigate to="/jobs" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/" element={user ? <Navigate to="/jobs" /> : <Home />} />
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/create-profile" element={<CreateStudentProfile />} />
         <Route path="/create-recruiter-profile" element={<CreateRecruiterProfile />} />
@@ -27,6 +33,8 @@ export default function App() {
         <Route path="/my-applications" element={<MyApplications />} />
         <Route path="/my-posted-jobs" element={<MyPostedJobs />} />
       </Routes>
+      </main>
+      <Footer />
     </>
   );
 }

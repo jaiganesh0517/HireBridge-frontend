@@ -3,19 +3,20 @@ import { createContext, useContext, useState } from "react";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  // Read from localStorage once, so login survives a page refresh
   const [user, setUser] = useState(() => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
     const userId = localStorage.getItem("userId");
-    return token ? { token, role, userId } : null;
+    const name = localStorage.getItem("name");
+    return token ? { token, role, userId, name } : null;
   });
 
-  const login = ({ token, role, userId }) => {
+  const login = ({ token, role, userId, name }) => {
     localStorage.setItem("token", token);
     localStorage.setItem("role", role);
     localStorage.setItem("userId", userId);
-    setUser({ token, role, userId });
+    localStorage.setItem("name", name || "");
+    setUser({ token, role, userId, name });
   };
 
   const logout = () => {

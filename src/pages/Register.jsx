@@ -22,7 +22,7 @@ export default function Register() {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: 320, margin: "40px auto", display: "grid", gap: 12 }}>
+    <form onSubmit={handleSubmit} className="form">
       <h2>Register</h2>
       <input name="userName" placeholder="Name" value={form.userName} onChange={handleChange} />
       <input name="emailId" placeholder="Email" value={form.emailId} onChange={handleChange} />
@@ -32,7 +32,7 @@ export default function Register() {
         <option value="RECRUITER">Recruiter</option>
       </select>
       <button type="submit">Register</button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error-text">{error}</p>}
     </form>
   );
 }
