@@ -279,3 +279,13 @@ button.secondary:hover { border-color: var(--ink); }
 @media (max-width: 640px) {
   .footer-inner { grid-template-columns: 1fr; }
 }
+.search-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.search-bar input {
+  flex: 1;
+  min-width: 160px;
+}

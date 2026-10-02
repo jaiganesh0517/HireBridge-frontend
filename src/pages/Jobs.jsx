@@ -6,11 +6,38 @@ export default function Jobs() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState({});
+  const [title, setTitle] = useState("");
+  const [skill, setSkill] = useState("");
   const { user } = useAuth();
 
-  useEffect(() => {
-    api.get("/api/jobs").then((res) => setJobs(res.data)).catch(console.log).finally(() => setLoading(false));
-  }, []);
+  const loadAllJobs = () => {
+    setLoading(true);
+    api.get("/api/jobs")
+      .then((res) => setJobs(res.data))
+      .catch(console.log)
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => { loadAllJobs(); }, []);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const params = {};
+    if (title.trim()) params.title = title.trim();
+    if (skill.trim()) params.skill = skill.trim();
+
+    api.get("/api/jobs/search", { params })
+      .then((res) => setJobs(res.data))
+      .catch(console.log)
+      .finally(() => setLoading(false));
+  };
+
+  const handleClear = () => {
+    setTitle("");
+    setSkill("");
+    loadAllJobs();
+  };
 
   const handleApply = async (jobId) => {
     setMessages((prev) => ({ ...prev, [jobId]: { text: "Applying...", ok: true } }));
@@ -23,13 +50,21 @@ export default function Jobs() {
     }
   };
 
-  if (loading) return <p className="page">Loading jobs...</p>;
-
   return (
     <div className="page stack">
       <h2>Open Jobs</h2>
-      {jobs.length === 0 && <p className="empty-state">No jobs available right now.</p>}
-      {jobs.map((job) => (
+
+      <form onSubmit={handleSearch} className="search-bar">
+        <input placeholder="Search by title" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <input placeholder="Search by skill" value={skill} onChange={(e) => setSkill(e.target.value)} />
+        <button type="submit">Search</button>
+        {(title || skill) && <button type="button" className="secondary" onClick={handleClear}>Clear</button>}
+      </form>
+
+      {loading && <p>Loading jobs...</p>}
+      {!loading && jobs.length === 0 && <p className="empty-state">No jobs match your search.</p>}
+
+      {!loading && jobs.map((job) => (
         <div key={job.jobPostId} className="card">
           <h3>{job.title}</h3>
           <p>{job.descrip}</p>
