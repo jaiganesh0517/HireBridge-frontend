@@ -3,7 +3,7 @@ import { useAuth } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Footer from "./components/Footer";
-import Login from "./pages/Login";
+import Login from "./pages/login";
 import Register from "./pages/Register";
 import Jobs from "./pages/Jobs";
 import CreateStudentProfile from "./pages/CreateStudentProfile";
