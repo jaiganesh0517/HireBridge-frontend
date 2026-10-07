@@ -6,7 +6,9 @@ export default function Home() {
   const [jobCount, setJobCount] = useState(null);
 
   useEffect(() => {
-    api.get("/api/jobs").then((res) => setJobCount(res.data.length)).catch(() => {});
+    api.get("/api/jobs", { params: { size: 1 } })
+  .then((res) => setJobCount(res.data.totalElements))
+  .catch(() => {});
   }, []);
 
   return (

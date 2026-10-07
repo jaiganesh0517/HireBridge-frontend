@@ -2,41 +2,69 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 
+const PAGE_SIZE = 3;
+
 export default function Jobs() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState({});
-  const [title, setTitle] = useState("");
-  const [skill, setSkill] = useState("");
   const { user } = useAuth();
 
-  const loadAllJobs = () => {
-    setLoading(true);
-    api.get("/api/jobs")
-      .then((res) => setJobs(res.data))
-      .catch(console.log)
-      .finally(() => setLoading(false));
-  };
+  // what the user is typing
+  const [title, setTitle] = useState("");
+  const [skill, setSkill] = useState("");
 
-  useEffect(() => { loadAllJobs(); }, []);
+  // what was actually submitted (these drive the fetch)
+  const [appliedTitle, setAppliedTitle] = useState("");
+  const [appliedSkill, setAppliedSkill] = useState("");
+
+  // pagination (page is 0-based, same as the backend)
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
+
+  // one fetch for everything: runs when page or applied filters change
+  useEffect(() => {
+    let ignore = false;   // stops an old, slower response from overwriting a newer one
+    setLoading(true);
+
+    const hasFilter = appliedTitle || appliedSkill;
+    const url = hasFilter ? "/api/jobs/search" : "/api/jobs";
+    const params = { page, size: PAGE_SIZE };
+    if (appliedTitle) params.title = appliedTitle;
+    if (appliedSkill) params.skill = appliedSkill;
+
+    api.get(url, { params })
+      .then((res) => {
+        if (ignore) return;
+        setJobs(res.data.content);
+        setTotalPages(res.data.totalPages);
+        setTotalElements(res.data.totalElements);
+      })
+      .catch(console.log)
+      .finally(() => { if (!ignore) setLoading(false); });
+
+    return () => { ignore = true; };
+  }, [page, appliedTitle, appliedSkill]);
 
   const handleSearch = (e) => {
     e.preventDefault();
-    setLoading(true);
-    const params = {};
-    if (title.trim()) params.title = title.trim();
-    if (skill.trim()) params.skill = skill.trim();
-
-    api.get("/api/jobs/search", { params })
-      .then((res) => setJobs(res.data))
-      .catch(console.log)
-      .finally(() => setLoading(false));
+    setAppliedTitle(title.trim());
+    setAppliedSkill(skill.trim());
+    setPage(0);   // a new search always starts from the first page
   };
 
   const handleClear = () => {
     setTitle("");
     setSkill("");
-    loadAllJobs();
+    setAppliedTitle("");
+    setAppliedSkill("");
+    setPage(0);
+  };
+
+  const goToPage = (p) => {
+    setPage(p);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleApply = async (jobId) => {
@@ -58,7 +86,9 @@ export default function Jobs() {
         <input placeholder="Search by title" value={title} onChange={(e) => setTitle(e.target.value)} />
         <input placeholder="Search by skill" value={skill} onChange={(e) => setSkill(e.target.value)} />
         <button type="submit">Search</button>
-        {(title || skill) && <button type="button" className="secondary" onClick={handleClear}>Clear</button>}
+        {(title || skill || appliedTitle || appliedSkill) && (
+          <button type="button" className="secondary" onClick={handleClear}>Clear</button>
+        )}
       </form>
 
       {loading && <p>Loading jobs...</p>}
@@ -85,6 +115,18 @@ export default function Jobs() {
           )}
         </div>
       ))}
+
+      {!loading && totalPages > 1 && (
+        <div className="pagination">
+          <button className="secondary" disabled={page === 0} onClick={() => goToPage(page - 1)}>
+            ← Previous
+          </button>
+          <span>Page {page + 1} of {totalPages} · {totalElements} jobs</span>
+          <button className="secondary" disabled={page >= totalPages - 1} onClick={() => goToPage(page + 1)}>
+            Next →
+          </button>
+        </div>
+      )}
     </div>
   );
 }
