@@ -15,9 +15,8 @@ export default function Register() {
     try {
       await api.post("/api/auth/register", form);
       navigate("/login");
-    } catch (err) {
-      console.log(err.response);
-      setError(err.response?.status === 409 ? "Email already registered." : "Registration failed.");
+        } catch (err) {
+      setError(err.response?.data?.message || "Registration failed. Please try again.");
     }
   };
 
@@ -27,6 +26,9 @@ export default function Register() {
       <input name="userName" placeholder="Name" value={form.userName} onChange={handleChange} />
       <input name="emailId" placeholder="Email" value={form.emailId} onChange={handleChange} />
       <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} />
+<small style={{ color: "var(--slate)" }}>
+  Minimum 6 characters, including one special character
+</small>
       <select name="role" value={form.role} onChange={handleChange}>
         <option value="STUDENT">Student</option>
         <option value="RECRUITER">Recruiter</option>

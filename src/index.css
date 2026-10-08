@@ -270,11 +270,13 @@ button.secondary:hover { border-color: var(--ink); }
   grid-template-columns: 2fr 1fr 1fr;
   gap: 24px;
 }
+
 .footer-inner a { display: block; border: none; color: var(--slate); font-size: 0.9rem; margin-bottom: 4px; }
 .footer-inner a:hover { color: var(--ink); }
 .footer-inner p { font-size: 0.9rem; margin-bottom: 0; }
 .footer-heading { font-weight: 600; color: var(--ink); margin-bottom: 6px !important; }
 .footer-bottom { max-width: 720px; margin: 24px auto 0; font-size: 0.8rem; color: var(--slate); }
+.footer-contact { font-weight: 600; color: var(--ink); margin-bottom: 6px !important; }
 
 @media (max-width: 640px) {
   .footer-inner { grid-template-columns: 1fr; }
@@ -351,4 +353,67 @@ button.secondary:hover { border-color: var(--ink); }
 .pagination button:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+/* ---------- Home page sections ---------- */
+.home-section {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+.home-section > h2 {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.steps,
+.role-grid {
+  display: grid;
+  gap: 20px;
+}
+.steps { grid-template-columns: repeat(3, 1fr); }
+.role-grid { grid-template-columns: repeat(2, 1fr); }
+
+.step-card,
+.role-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 24px;
+}
+.step-card h3,
+.role-card h3 { margin: 12px 0 8px; }
+.step-card p { color: var(--slate); margin: 0; }
+
+.step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--signal);
+  font-family: "Lora", serif;
+  font-weight: 600;
+}
+
+.role-card ul {
+  padding-left: 18px;
+  margin: 0 0 20px;
+  color: var(--slate);
+  line-height: 1.8;
+}
+
+.cta-band {
+  background: var(--ink);
+  color: var(--paper);
+  text-align: center;
+  padding: 48px 24px;
+  margin-top: 24px;
+}
+.cta-band h2 { color: var(--paper); margin-bottom: 20px; }
+
+@media (max-width: 720px) {
+  .steps,
+  .role-grid { grid-template-columns: 1fr; }
 }

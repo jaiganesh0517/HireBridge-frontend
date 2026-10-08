@@ -26,7 +26,7 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/" element={user ? <Navigate to="/jobs" /> : <Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/create-profile" element={<CreateStudentProfile />} />
         <Route path="/create-recruiter-profile" element={<CreateRecruiterProfile />} />

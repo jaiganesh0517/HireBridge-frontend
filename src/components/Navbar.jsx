@@ -7,7 +7,7 @@ export default function Navbar() {
 
   return (
     <nav className="navbar">
-      <Link to="/jobs" className="brand">
+      <Link to="/" className="brand">
         <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
           <path d="M3 17 Q13 5 23 17" stroke="#C8963E" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
           <circle cx="3" cy="17" r="2.5" fill="#1B2430"/>
