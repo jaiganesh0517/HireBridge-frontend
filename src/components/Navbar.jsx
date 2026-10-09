@@ -17,6 +17,7 @@ export default function Navbar() {
       </Link>
 
       <div className="nav-links">
+        <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>Home</NavLink>
         <NavLink to="/jobs" className={({ isActive }) => (isActive ? "active" : "")}>Jobs</NavLink>
         {!user && <NavLink to="/login" className={({ isActive }) => (isActive ? "active" : "")}>Login</NavLink>}
         {!user && <NavLink to="/register" className={({ isActive }) => (isActive ? "active" : "")}>Register</NavLink>}
