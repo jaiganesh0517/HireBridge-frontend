@@ -13,6 +13,9 @@ import AddBranches from "./pages/AddBranches";
 import Applicants from "./pages/Applicants";
 import MyApplications from "./pages/MyApplications";
 import MyPostedJobs from "./pages/MyPostedJobs";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
 
 export default function App() {
   const { user } = useAuth();
@@ -23,7 +26,7 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/" element={user ? <Navigate to="/jobs" /> : <Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/create-profile" element={<CreateStudentProfile />} />
         <Route path="/create-recruiter-profile" element={<CreateRecruiterProfile />} />
@@ -32,6 +35,8 @@ export default function App() {
         <Route path="/jobs/:jobId/applicants" element={<Applicants />} />
         <Route path="/my-applications" element={<MyApplications />} />
         <Route path="/my-posted-jobs" element={<MyPostedJobs />} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/edit-profile" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
       </Routes>
       </main>
       <Footer />

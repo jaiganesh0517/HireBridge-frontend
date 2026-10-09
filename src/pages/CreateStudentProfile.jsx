@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
 export default function CreateStudentProfile() {
-  const [form, setForm] = useState({ about: "", bacthYear: "", branch: "", cgpa: "", skills: "" });
+  const [form, setForm] = useState({ about: "", batchYear: "", branch: "", cgpa: "", skills: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -15,7 +15,7 @@ export default function CreateStudentProfile() {
     try {
       await api.post("/api/students/profile", {
         ...form,
-        bacthYear: Number(form.bacthYear),
+        bacthYear: Number(form.batchYear),
         cgpa: Number(form.cgpa),
       });
       navigate("/jobs");
@@ -29,7 +29,7 @@ export default function CreateStudentProfile() {
     <form onSubmit={handleSubmit} className="form">
       <h2>Create Student Profile</h2>
       <input name="branch" placeholder="Branch (e.g. CSE)" value={form.branch} onChange={handleChange} />
-      <input name="bacthYear" type="number" placeholder="Batch Year (e.g. 2026)" value={form.bacthYear} onChange={handleChange} />
+      <input name="batchYear" type="number" placeholder="Batch Year (e.g. 2026)" value={form.batchYear} onChange={handleChange} />
       <input name="cgpa" type="number" step="0.01" placeholder="CGPA" value={form.cgpa} onChange={handleChange} />
       <input name="skills" placeholder="Skills (comma separated)" value={form.skills} onChange={handleChange} />
       <textarea name="about" placeholder="About you" value={form.about} onChange={handleChange} />
