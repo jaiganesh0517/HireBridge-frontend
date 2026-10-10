@@ -17,7 +17,7 @@ export default function Footer() {
           <p className="footer-contact">Contact</p>
           <a href="mailto:jaiganesh0517@gmail.com">Email</a>
           <a href="https://github.com/jaiganesh0517" target="_blank" rel="noopener noreferrer">GitHub</a>
-          <a href="https://www.linkedin.com/in/your-profile" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://www.linkedin.com/in/jai-ganesh-689246333/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         </div>
       </div>
       <p className="footer-bottom">© {new Date().getFullYear()} HireBridge. Built by Jaiganesh.</p>
