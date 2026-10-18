@@ -1,9 +1,21 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api/axios";
+import { useAuth } from "../context/AuthContext"; // verify: tumhara path aur naam
 
 export default function Home() {
   const [jobCount, setJobCount] = useState(null);
+  const { user } = useAuth(); // verify: tumhara context kya return karta hai
+
+  const role = user?.role?.toUpperCase(); // "STUDENT" ya "RECRUITER"
+  const isRecruiter = role === "RECRUITER";
+
+  // Logged out: register. Student: jobs. Recruiter: post-job.
+  const getStartedPath = !user ? "/register" : isRecruiter ? "/post-job" : "/jobs";
+  const getStartedLabel = !user ? "Get started" : isRecruiter ? "Post a job" : "Browse jobs";
+  const ctaHeading = isRecruiter
+    ? "Ready to hire your next teammate?"
+    : "Ready to find your first role?";
 
   useEffect(() => {
     api.get("/api/jobs", { params: { size: 1 } })
@@ -15,13 +27,15 @@ export default function Home() {
     <>
       <div className="hero">
         <h1>Bridge the gap between talent and opportunity.</h1>
-<p className="hero-quote">
-  Students apply to roles they're eligible for. Recruiters review,
-  shortlist and select, all in one place.
-</p>
+        <p className="hero-quote">
+          Students apply to roles they're eligible for. Recruiters review,
+          shortlist and select, all in one place.
+        </p>
         <div className="hero-actions">
           <Link to="/jobs" className="btn-primary">Browse Open Roles</Link>
-          <Link to="/register" className="btn-secondary">Create your account</Link>
+          {!user && (
+            <Link to="/register" className="btn-secondary">Create your account</Link>
+          )}
         </div>
         {jobCount !== null && (
           <p className="hero-stat">
@@ -61,7 +75,9 @@ export default function Home() {
               <li>Apply in one click</li>
               <li>Follow application status live</li>
             </ul>
-            <Link to="/register" className="btn-secondary">Join as a student</Link>
+            {!user && (
+              <Link to="/register" className="btn-secondary">Join as a student</Link>
+            )}
           </div>
           <div className="role-card">
             <h3>For recruiters</h3>
@@ -70,14 +86,16 @@ export default function Home() {
               <li>Review applicants for each role</li>
               <li>Shortlist, select or reject in a click</li>
             </ul>
-            <Link to="/register" className="btn-secondary">Join as a recruiter</Link>
+            {!user && (
+              <Link to="/register" className="btn-secondary">Join as a recruiter</Link>
+            )}
           </div>
         </div>
       </section>
 
       <section className="cta-band">
-        <h2>Ready to find your first role?</h2>
-        <Link to="/register" className="btn-primary">Get started</Link>
+        <h2>{ctaHeading}</h2>
+        <Link to={getStartedPath} className="btn-primary">{getStartedLabel}</Link>
       </section>
     </>
   );
