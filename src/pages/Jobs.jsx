@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
+import useSavedJobs from "../hooks/useSavedJobs";
 
 const PAGE_SIZE = 3;
 
@@ -9,6 +10,10 @@ export default function Jobs() {
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState({});
   const { user } = useAuth();
+
+  // saved jobs (students only)
+  const isStudent = user?.role === "STUDENT";
+  const { savedIds, toggleSave } = useSavedJobs(isStudent);
 
   // what the user is typing
   const [title, setTitle] = useState("");
@@ -102,11 +107,22 @@ export default function Jobs() {
           <p>Deadline: {new Date(job.deadline).toLocaleDateString()}</p>
           <span className={`tag tag-${job.jobStatus.toLowerCase()}`}>{job.jobStatus}</span>
 
-          {user?.role === "STUDENT" && job.jobStatus === "OPEN" && (
-            <div style={{ marginTop: 12 }}>
-              <button onClick={() => handleApply(job.jobPostId)}>Apply</button>
-            </div>
-          )}
+          {isStudent && (
+  <div className="card-actions">
+    {job.jobStatus === "OPEN" && (
+      <button type="button" onClick={() => handleApply(job.jobPostId)}>
+        Apply
+      </button>
+    )}
+    <button
+      type="button"
+      className="bookmark-btn"
+      onClick={() => toggleSave(job.jobPostId)}
+    >
+      {savedIds.has(job.jobPostId) ? "Saved" : "Save"}
+    </button>
+  </div>
+)}
 
           {messages[job.jobPostId] && (
             <p className={messages[job.jobPostId].ok ? "success-text" : "error-text"} style={{ marginTop: 8 }}>
