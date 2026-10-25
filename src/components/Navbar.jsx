@@ -23,8 +23,15 @@ export default function Navbar() {
         {!user && <NavLink to="/register" className={({ isActive }) => (isActive ? "active" : "")}>Register</NavLink>}
 
         {user?.role === "STUDENT" && (
-          <NavLink to="/my-applications" className={({ isActive }) => (isActive ? "active" : "")}>My Applications</NavLink>
-        )}
+  <>
+    <NavLink to="/my-applications" className={({ isActive }) => (isActive ? "active" : "")}>
+      My Applications
+    </NavLink>
+    <NavLink to="/saved-jobs" className={({ isActive }) => (isActive ? "active" : "")}>
+      Saved jobs
+    </NavLink>
+  </>
+)}
 
         {user?.role === "RECRUITER" && (
           <>

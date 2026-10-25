@@ -16,6 +16,7 @@ import MyPostedJobs from "./pages/MyPostedJobs";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
+import SavedJobs from "./pages/SavedJobs";
 
 export default function App() {
   const { user } = useAuth();
@@ -37,6 +38,7 @@ export default function App() {
         <Route path="/my-posted-jobs" element={<MyPostedJobs />} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/edit-profile" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+        <Route path="/saved-jobs" element={/* same student wrapper as /my-applications */ <SavedJobs />} />
       </Routes>
       </main>
       <Footer />

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
+import useSavedJobs from "../hooks/useSavedJobs";
 
 const PAGE_SIZE = 3;
 
@@ -8,7 +9,12 @@ export default function Jobs() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState({});
+  const [resumeFiles, setResumeFiles] = useState({}); // { [jobPostId]: File }
   const { user } = useAuth();
+
+  // saved jobs (students only)
+  const isStudent = user?.role === "STUDENT";
+  const { savedIds, toggleSave } = useSavedJobs(isStudent);
 
   // what the user is typing
   const [title, setTitle] = useState("");
@@ -67,16 +73,29 @@ export default function Jobs() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleApply = async (jobId) => {
-    setMessages((prev) => ({ ...prev, [jobId]: { text: "Applying...", ok: true } }));
-    try {
-      await api.post(`/api/application/${jobId}/apply`);
-      setMessages((prev) => ({ ...prev, [jobId]: { text: "Applied successfully!", ok: true } }));
-    } catch (err) {
-      const text = err.response?.data?.message || "Could not apply. Check eligibility.";
-      setMessages((prev) => ({ ...prev, [jobId]: { text, ok: false } }));
-    }
-  };
+ const handleApply = async (jobId) => {
+  setMessages((prev) => ({ ...prev, [jobId]: { text: "Applying...", ok: true } }));
+
+  const file = resumeFiles[jobId];
+  let body;                       // stays undefined when no file is chosen
+  if (file) {
+    body = new FormData();
+    body.append("file", file);
+  }
+
+  try {
+    await api.post(`/api/application/${jobId}/apply`, body);
+    setMessages((prev) => ({ ...prev, [jobId]: { text: "Applied successfully!", ok: true } }));
+    setResumeFiles((prev) => {
+      const next = { ...prev };
+      delete next[jobId];
+      return next;
+    });
+  } catch (err) {
+    const text = err.response?.data?.message || "Could not apply. Check eligibility.";
+    setMessages((prev) => ({ ...prev, [jobId]: { text, ok: false } }));
+  }
+};
 
   return (
     <div className="page stack">
@@ -102,11 +121,54 @@ export default function Jobs() {
           <p>Deadline: {new Date(job.deadline).toLocaleDateString()}</p>
           <span className={`tag tag-${job.jobStatus.toLowerCase()}`}>{job.jobStatus}</span>
 
-          {user?.role === "STUDENT" && job.jobStatus === "OPEN" && (
-            <div style={{ marginTop: 12 }}>
-              <button onClick={() => handleApply(job.jobPostId)}>Apply</button>
-            </div>
-          )}
+          {isStudent && (
+  <>
+    {job.jobStatus === "OPEN" && (
+      <div className="stack" style={{ marginTop: 8 }}>
+        <label className="btn-secondary" style={{ cursor: "pointer" }}>
+          {resumeFiles[job.jobPostId]
+            ? resumeFiles[job.jobPostId].name
+            : "Attach a different resume (optional)"}
+          <input
+            type="file"
+            accept=".pdf,application/pdf"
+            style={{ display: "none" }}
+            onChange={(e) => {
+              const f = e.target.files[0];
+              if (!f) return;
+              if (f.type !== "application/pdf" || f.size > 2 * 1024 * 1024) {
+                setMessages((prev) => ({
+                  ...prev,
+                  [job.jobPostId]: { text: "Resume must be a PDF of 2 MB or less", ok: false },
+                }));
+                e.target.value = "";
+                return;
+              }
+              setResumeFiles((prev) => ({ ...prev, [job.jobPostId]: f }));
+              e.target.value = "";   // lets the same file be picked again later
+            }}
+          />
+        </label>
+        <small>Leave empty to use your profile resume.</small>
+      </div>
+    )}
+
+    <div className="card-actions">
+      {job.jobStatus === "OPEN" && (
+        <button type="button" onClick={() => handleApply(job.jobPostId)}>
+          Apply
+        </button>
+      )}
+      <button
+        type="button"
+        className="bookmark-btn"
+        onClick={() => toggleSave(job.jobPostId)}
+      >
+        {savedIds.has(job.jobPostId) ? "Saved" : "Save"}
+      </button>
+    </div>
+  </>
+)}
 
           {messages[job.jobPostId] && (
             <p className={messages[job.jobPostId].ok ? "success-text" : "error-text"} style={{ marginTop: 8 }}>

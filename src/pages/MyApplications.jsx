@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
+import ViewResumeButton from "../components/ViewResumeButton";
 
 export default function MyApplications() {
   const [applications, setApplications] = useState([]);
@@ -30,6 +31,9 @@ export default function MyApplications() {
           <p>Job status: <span className={`tag tag-${app.jobStatus.toLowerCase()}`}>{app.jobStatus}</span></p>
           <p style={{ marginTop: 8 }}>Your status: <span className={`tag tag-${app.status.toLowerCase()}`}>{app.status}</span></p>
           <p>Applied: {new Date(app.appliedAt).toLocaleDateString()}</p>
+         {app.hasResume
+  ? <ViewResumeButton applicationId={app.applicationId} />
+  : <small>No resume attached (applied before resume support)</small>}
         </div>
       ))}
     </div>

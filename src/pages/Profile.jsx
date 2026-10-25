@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
+import ResumeSection from "../components/ResumeSection";
 
 export default function Profile() {
   const { user } = useAuth();
@@ -65,6 +66,7 @@ export default function Profile() {
                 ))}
               </div>
             </div>
+            <ResumeSection profile={profile} onUpdated={setProfile} />
           </>
         ) : (
           <>
