@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/axios";
-
+import ViewResumeButton from "../components/ViewResumeButton";
 export default function Applicants() {
   const { jobId } = useParams();
   const [applicants, setApplicants] = useState([]);
@@ -54,7 +54,16 @@ export default function Applicants() {
           <p>Skills: {a.skills}</p>
           <p>Applied: {new Date(a.appliedAt).toLocaleDateString()}</p>
           <span className={`tag tag-${a.status.toLowerCase()}`}>{a.status}</span>
-
+          <div style={{ marginTop: 12 }}>
+  {a.hasResume ? (
+    <>
+      <ViewResumeButton applicationId={a.applicationId} />
+      <small> {a.resumeFileName}</small>
+    </>
+  ) : (
+    <small>No resume attached (applied before resume support)</small>
+  )}
+</div>
           <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
             <button onClick={() => updateStatus(a.applicationId, "SHORTLISTED")}>Shortlist</button>
             <button onClick={() => updateStatus(a.applicationId, "SELECTED")}>Select</button>
