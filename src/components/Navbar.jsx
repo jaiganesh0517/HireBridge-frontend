@@ -1,6 +1,7 @@
 import { NavLink, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ProfileMenu from "./ProfileMenu";
+import NotificationBell from "./NotificationBell";
 
 export default function Navbar() {
   const { user } = useAuth();
@@ -33,7 +34,7 @@ export default function Navbar() {
   </>
 )}
 
-        {user?.role === "RECRUITER" && (
+              {user?.role === "RECRUITER" && (
           <>
             <NavLink to="/post-job" className={({ isActive }) => (isActive ? "active" : "")}>Post Job</NavLink>
             <NavLink to="/my-posted-jobs" className={({ isActive }) => (isActive ? "active" : "")}>My Posted Jobs</NavLink>
@@ -41,7 +42,12 @@ export default function Navbar() {
         )}
       </div>
 
-      {user && <ProfileMenu />}
+      {user && (
+        <div className="nav-right">
+          {user.role === "STUDENT" && <NotificationBell />}
+          <ProfileMenu />
+        </div>
+      )}
     </nav>
   );
 }
