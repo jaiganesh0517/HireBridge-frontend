@@ -443,3 +443,29 @@ button.bookmark-btn:hover {
   .steps,
   .role-grid { grid-template-columns: 1fr; }
 }
+.nav-right { display: flex; align-items: center; gap: 16px; }
+
+.notif-wrap { position: relative; }
+.notif-btn { position: relative; background: none; border: none; cursor: pointer; padding: 6px; }
+.notif-badge {
+  position: absolute; top: 0; right: 0;
+  background: #d93025; color: #fff;
+  font-size: 11px; min-width: 16px; height: 16px;
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  padding: 0 4px;
+}
+
+.notif-dropdown {
+  position: absolute; right: 0; top: 40px; width: 340px; max-height: 420px; overflow-y: auto;
+  background: #fff; border: 1px solid #e5e5e5; border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 100;
+}
+.notif-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-bottom: 1px solid #eee; }
+.notif-link { background: none; border: none; color: #C8963E; cursor: pointer; font-size: 13px; }
+.notif-item { padding: 12px 14px; border-bottom: 1px solid #f2f2f2; cursor: pointer; }
+.notif-item:hover { background: #faf7f0; }
+.notif-item.unread { background: #fdf6e7; border-left: 3px solid #C8963E; }
+.notif-title { font-weight: 600; font-size: 14px; }
+.notif-msg { font-size: 13px; color: #555; margin-top: 2px; }
+.notif-time { font-size: 12px; color: #999; margin-top: 4px; }
+.notif-empty { padding: 20px; text-align: center; color: #888; }
